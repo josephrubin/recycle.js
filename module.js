@@ -70,6 +70,7 @@ if (window.module == (void 0))
 			//Load all the registered modules, and callback when complete
 			loadModules: function(callback) {
 				var scriptsLoaded = 0;
+				var callbackCalled = false;
 				for (var id in modules)
 				{
 					if (modules.hasOwnProperty(id))
@@ -86,11 +87,16 @@ if (window.module == (void 0))
 								if (scriptsLoaded == numModules) //If all modules have been loaded
 								{
 									console.log("Finished loading scripts: " + scriptsLoaded);
+									callbackCalled = true;
 									callback.call();
 								}
 							});
 						}
 					}
+				}
+				if (!callbackCalled)
+				{
+					callback.call();
 				}
 			}
 		}
