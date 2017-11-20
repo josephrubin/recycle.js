@@ -1,4 +1,4 @@
-"# module.js" 
+# recycle.js
 
 How to use (easy!):
 1) Register all modules once each with module.register(identification, pathToModuleFromHtmlFile).
