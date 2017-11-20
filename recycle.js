@@ -46,6 +46,7 @@ if (window.mod == (void 0))
 					addModule(first[id], id);
 				});
 			}
+			return lib;
 		}
 		
 		/**

@@ -1,8 +1,20 @@
 # recycle.js
+A perfectly lightweight, utterly simple, JavaScript module library.
 
-How to use (easy!):
-1) Register all modules once each with module.register(identification, pathToModuleFromHtmlFile).
-	Consider creating a seperate .js file to register all of the modules, with a constant to identify each one.
+## How to use (easy!):
+#### Download recycle.js, and reference it from your HTML file:
+recycle.js has no dependencies on other libraries, so feel free to load it in first.
+```
+<script type = "text/javascript" src = "recycle.js"></script>
+```
+#### Prepare all modules once by associating an identifier with the path to the module file:
+The path should be relative to the HTML file.
+```
+mod.prepare({
+	"Utils": "modules/utils.js",
+	"Calculus": "modules/calc.js"
+});
+```
 2) Call module.loadModules(callback) and run all code that needs the modules inside the callback.
 	If modules have already been previously loaded, they will not be loaded again (callback may be called immediately).
 3) Inside the callback, get each module with module.use(identification).
