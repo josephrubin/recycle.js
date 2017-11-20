@@ -1,7 +1,7 @@
 # recycle.js
 A perfectly lightweight, utterly simple, asynchronous JavaScript module library.
 
-### Features (rewrite this section)
+### Features (rewrite this section) (WIP)
 - Modules can reference other modules, even circularly.
 - Asynchronous script loading, which does not block the HTML from populating.
 - Seperation of modules for total encapsulation
@@ -16,6 +16,7 @@ recycle.js has no dependencies on other libraries, so feel free to load it in fi
 ```
 #### Prepare all modules once by associating an identifier with the path to each module file:
 The path should be relative to the HTML file.
+The order that you list the modules will not effect their ability to interact with one another.
 ```
 mod.prepare({
 	"utils": "modules/utils.js",
@@ -24,6 +25,7 @@ mod.prepare({
 ```
 #### Load up the modules you have prepared and provide a callback function:
 All code that uses the modules should be placed inside the callback, to make sure that they are loaded before they are needed.
+Do not use this callback in place of a body onload, since you can never be sure which will load first.
 ```
 mod.prepare({
 	"utils": "modules/utils.js",
@@ -48,20 +50,31 @@ mod.loadPrepared(function() {
 });
 ```
 > Hello, recycle.js!
+
 That's all there is to it.
 
-###Creating a module
+### Creating a module
+#### Each module is a seperate .js file:
+Do not manually place the script tags in your HTML. recycle.js takes care of loading the modules for you.
 
-###Advanced capabilities.
-2) Call module.loadModules(callback) and run all code that needs the modules inside the callback.
-	If modules have already been previously loaded, they will not be loaded again (callback may be called immediately).
-3) Inside the callback, get each module with module.use(identification).
-	Do not attempt to use module.use outside of the module.loadModules callback, because perhaps the modules have not been loaded yet! (An error will be thrown in such a case).
-	Do not use this callback in place of body onload or $(document).ready. True, that these asynchronous script loads will probably take longer than the body to load, but it is bad form to rely on such timing specifics. Instead, if the body needs to be loaded for your code to work, use both callbacks.
+#### Export your module by setting mod.exports to the desired value:
+Place your code inside a closure so as not to pollute the global scope, while providing a private interface for your module.
+Consider returning an object, with various methods and properties for the user to interact with.
+```
+//modules/utils.js
+mod.exports = (function() {
+	return {
+		captializeSentence: function(str) {
+			//...
+		},
+		//...
+	}
+})();
+```
 
-Creating a module:
-1) Each module is a seperate .js file which is not linked to from the HTML (the library adds the <script> tags for you when necessary).
-2) Your module's code will be run at most once, and the user of module.use(identification) will be given the value exported in your module.
-3) Your module exports its value by setting window.exports to the desired return value.
-	Consider returning an object, which will have properties and methods for the caller to use.
-	Consider creating this object inside a closure, so as not to pollute the global namespace, while providing a private interface for your object.
+###Advanced capabilities (WIP)
+modules reference other modules,
+chaining,
+alises for certain functions,
+preparing one module at a time,
+preparing modules in groups (with chaining)
