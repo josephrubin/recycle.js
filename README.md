@@ -1,20 +1,58 @@
 # recycle.js
-A perfectly lightweight, utterly simple, JavaScript module library.
+A perfectly lightweight, utterly simple, asynchronous JavaScript module library.
 
-## How to use (easy!):
+### Features (rewrite this section)
+- Modules can reference other modules, even circularly.
+- Asynchronous script loading, which does not block the HTML from populating.
+- Seperation of modules for total encapsulation
+- Does not polute global scope etc
+- Modules alow for code reuse across projects
+
+### Quick start instructions
 #### Download recycle.js, and reference it from your HTML file:
 recycle.js has no dependencies on other libraries, so feel free to load it in first.
 ```
 <script type = "text/javascript" src = "recycle.js"></script>
 ```
-#### Prepare all modules once by associating an identifier with the path to the module file:
+#### Prepare all modules once by associating an identifier with the path to each module file:
 The path should be relative to the HTML file.
 ```
 mod.prepare({
-	"Utils": "modules/utils.js",
-	"Calculus": "modules/calc.js"
+	"utils": "modules/utils.js",
+	"calc":  "modules/calculus.js"
 });
 ```
+#### Load up the modules you have prepared and provide a callback function:
+All code that uses the modules should be placed inside the callback, to make sure that they are loaded before they are needed.
+```
+mod.prepare({
+	"utils": "modules/utils.js",
+	"calc":  "modules/calculus.js"
+});
+mod.loadPrepared(function() {
+	//...
+});
+```
+#### Retrieve each module that you would like to use inside the callback:
+There is no need to get the modules that you won't be using in this file.
+```
+mod.prepare({
+	"utils": "modules/utils.js",
+	"calc":  "modules/calculus.js"
+});
+mod.loadPrepared(function() {
+	var Utils = mod.get("utils");
+	//var Calc = mod.get("calc");
+
+	console.log(Utils.captializeSentence("hello, recycle.js!"));
+});
+```
+> Hello, recycle.js!
+That's all there is to it.
+
+###Creating a module
+
+###Advanced capabilities.
 2) Call module.loadModules(callback) and run all code that needs the modules inside the callback.
 	If modules have already been previously loaded, they will not be loaded again (callback may be called immediately).
 3) Inside the callback, get each module with module.use(identification).
