@@ -7,6 +7,7 @@ A perfectly lightweight, utterly simple, asynchronous JavaScript module library.
 - Seperation of modules for total encapsulation
 - Does not polute global scope etc
 - Modules alow for code reuse across projects
+- No transpiler, preprocesser, or instalation
 
 ### Quick start instructions
 #### Download recycle.js, and reference it from your HTML file:
@@ -43,7 +44,7 @@ mod.prepare({
 	"calc":  "modules/calculus.js"
 });
 mod.loadPrepared(function() {
-	var Utils = mod.get("utils");
+	var Utils = mod.get("utils"); //You can also use mod.require (an alias to mod.get)
 	//var Calc = mod.get("calc");
 
 	console.log(Utils.captializeSentence("hello, recycle.js!"));
@@ -72,9 +73,42 @@ mod.exports = (function() {
 })();
 ```
 
-###Advanced capabilities (WIP)
-modules reference other modules,
-chaining,
-alises for certain functions,
-preparing one module at a time,
-preparing modules in groups (with chaining)
+### Advanced capabilities (WIP)
+#### Advanced module preperation (WIP)
+mod.prepare returns a reference to mod, allowing for chainging from mod.prepare
+```
+mod.prepare({
+	EXCLAMER: "modules/exclamer.js",
+	ADDER: "modules/adder.js",
+	DEPEND: "modules/depend.js"
+})
+.loadPrepared(function() {
+	//...
+});
+```
+You can even group sets of related module preperations (WIP, use strings teach about globals later)
+```
+mod.prepare({
+	EXCLAMER: "modules/exclamer.js",
+	ADDER: "modules/adder.js",
+	DEPEND: "modules/depend.js"
+})
+.prepare({
+	EXCLAMER: "modules/exclamer.js",
+	ADDER: "modules/adder.js",
+	DEPEND: "modules/depend.js"
+})
+```
+If you prefer, you can import one module at a time (Possible remove this functionality?)(WIP)
+`mod.prepare(path, identifier); //Note that in this form, the path comes first.`
+Preparing and using modules without quotes in identifiers:
+You can leave out the quotes when creating identifiers for modules
+`example here`
+You can then get the modules like this:
+`example here`
+This reserves global blah blah
+Cannot overwrite something. Polutes global scope.
+Reccomend using capitals since this so you know what is what.
+#### Modules can use other modules! (WIP)
+#### Even circular references! (WIP_
+(take care not to do initialazation in the loadPrepared callback, and give a remedy for this)

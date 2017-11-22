@@ -1,3 +1,8 @@
+if (window == (void 0))
+{
+	throw "recycle.js can be run only in browser!";
+}
+
 if (window.mod == (void 0))
 {
 	window.mod = window.module = (function() {
@@ -117,7 +122,7 @@ if (window.mod == (void 0))
 			head.appendChild(script);
 		}
 		
-		lib.get = lib.use = lib.require = function(id) {
+		lib.get = lib.require = function(id) {
 			if (id in modules)
 			{
 				var m = modules[id];
