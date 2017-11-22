@@ -11,14 +11,16 @@ A perfectly lightweight, utterly simple, asynchronous JavaScript module library.
 
 ### Quick start instructions
 #### Download recycle.js, and reference it from your HTML file:
-recycle.js has no dependencies on other libraries, so feel free to load it in first.
+recycle.js has no dependencies on other libraries, so feel free to load it first.
 >index.html
 ```
-<script type = "text/javascript" src = "recycle.js"></script>
+<script type = "text/javascript" src = "recycle.js"></script> <!-- Load recycle.js -->
+<script type = "text/javascript" src = "main.js"></script> <!-- Code that uses recycle.js -->
 ```
 #### Prepare all modules once by associating an identifier with the path to each module file:
 The path should be relative to the HTML file.
 The order that you list the modules will not effect their ability to interact with one another.
+>main.js
 ```
 mod.prepare({
     "utils": "modules/utils.js",
@@ -29,6 +31,7 @@ mod.prepare({
 All code that uses the modules should be placed inside the callback, to make sure that they are loaded before they are needed.
 Do not use this callback in place of a body onload, since you can never be sure which will load first.
 ```
+>main.js
 mod.prepare({
     "utils": "modules/utils.js",
     "calc":  "modules/calculus.js"
@@ -40,6 +43,7 @@ mod.loadPrepared(function() {
 #### Retrieve each module that you would like to use inside the callback:
 There is no need to get the modules that you won't be using in this file.
 ```
+>main.js
 mod.prepare({
     "utils": "modules/utils.js",
     "calc":  "modules/calculus.js"
@@ -62,8 +66,8 @@ Do not manually place the script tags in your HTML. recycle.js takes care of loa
 #### Export your module by setting mod.exports to the desired value:
 Place your code inside a closure so as not to pollute the global scope, while providing a private interface for your module.
 Consider returning an object, with various methods and properties for the user to interact with.
+>modules/utils.js
 ```
-//modules/utils.js
 mod.exports = (function() {
     return {
         captializeSentence: function(str) {
@@ -77,6 +81,7 @@ mod.exports = (function() {
 ### Advanced capabilities (WIP)
 #### Advanced module preperation (WIP)
 mod.prepare returns a reference to mod, allowing for chaining from mod.prepare
+>main.js
 ```
 mod.prepare({
     EXCLAMER: "modules/exclamer.js",
@@ -88,6 +93,7 @@ mod.prepare({
 });
 ```
 You can even group sets of related module preperations (WIP, use strings teach about globals later)
+>main.js
 ```
 mod.prepare({
     EXCLAMER: "modules/exclamer.js",
@@ -104,6 +110,7 @@ mod.prepare({
 });
 ```
 If you prefer, you can import one module at a time (Possible remove this functionality?)(WIP)
+>main.js
 ```
 mod.prepare(path, identifier); //Note that in this form, the path comes first.
 ```
