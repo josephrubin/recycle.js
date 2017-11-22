@@ -74,7 +74,10 @@ if (window.mod == (void 0))
 					loadModule(m, function() {
 						(function(m) {
 							console.log("LOADED " + id);
-							m.instance = Object.assign({}, lib.exports); //clone
+							if (typeof lib.exports == 'object')
+								m.instance = Object.assign({}, lib.exports); //clone if obj
+							else
+								m.instance = lib.exports;
 							lib.exports = null;
 							if (index + 1 == keys.length) //If all modules have been loaded
 							{
@@ -100,7 +103,7 @@ if (window.mod == (void 0))
 								while (repeat == true);
 								
 								//Finally resume
-								callback.call();
+								callback();
 							}
 						})(m);
 					});
