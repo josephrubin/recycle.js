@@ -103,12 +103,12 @@ If you prefer, you can import one module at a time (Possible remove this functio
 `mod.prepare(path, identifier); //Note that in this form, the path comes first.`
 Preparing and using modules without quotes in identifiers:
 You can leave out the quotes when creating identifiers for modules
-`example here`
+```example here```
 You can then get the modules like this:
-`example here`
+```example here```
 This reserves global blah blah
 Cannot overwrite something. Polutes global scope.
-Reccomend using capitals since this so you know what is what.
+Recommend using capitals since this so you know what is what.
 #### Modules can use other modules! (WIP)
-#### Even circular references! (WIP_
-(take care not to do initialazation in the loadPrepared callback, and give a remedy for this)
+#### Even circular references! (WIP)
+(take care not to do initialization in the loadPrepared callback, and give a remedy for this)
