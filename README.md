@@ -13,6 +13,7 @@ A perfectly lightweight, utterly simple, asynchronous JavaScript module library.
 #### Download recycle.js, and reference it from your HTML file:
 recycle.js has no dependencies on other libraries, so feel free to load it in first.
 ```
+>index.html
 <script type = "text/javascript" src = "recycle.js"></script>
 ```
 #### Prepare all modules once by associating an identifier with the path to each module file:
@@ -75,7 +76,7 @@ mod.exports = (function() {
 
 ### Advanced capabilities (WIP)
 #### Advanced module preperation (WIP)
-mod.prepare returns a reference to mod, allowing for chainging from mod.prepare
+mod.prepare returns a reference to mod, allowing for chaining from mod.prepare
 ```
 mod.prepare({
     EXCLAMER: "modules/exclamer.js",
@@ -98,13 +99,18 @@ mod.prepare({
     ADDER: "modules/adder.js",
     DEPEND: "modules/depend.js"
 })
+.loadPrepared(function() {
+    //...
+});
 ```
 If you prefer, you can import one module at a time (Possible remove this functionality?)(WIP)
-`mod.prepare(path, identifier); //Note that in this form, the path comes first.`
+```
+mod.prepare(path, identifier); //Note that in this form, the path comes first.
+```
 Preparing and using modules without quotes in identifiers:
 You can leave out the quotes when creating identifiers for modules
 ```example here```
-You can then get the modules like this:
+You can then get the modules like this
 ```example here```
 This reserves global blah blah
 Cannot overwrite something. Polutes global scope.
