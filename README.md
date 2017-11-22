@@ -20,8 +20,8 @@ The path should be relative to the HTML file.
 The order that you list the modules will not effect their ability to interact with one another.
 ```
 mod.prepare({
-	"utils": "modules/utils.js",
-	"calc":  "modules/calculus.js"
+    "utils": "modules/utils.js",
+    "calc":  "modules/calculus.js"
 });
 ```
 #### Load up the modules you have prepared and provide a callback function:
@@ -29,25 +29,25 @@ All code that uses the modules should be placed inside the callback, to make sur
 Do not use this callback in place of a body onload, since you can never be sure which will load first.
 ```
 mod.prepare({
-	"utils": "modules/utils.js",
-	"calc":  "modules/calculus.js"
+    "utils": "modules/utils.js",
+    "calc":  "modules/calculus.js"
 });
 mod.loadPrepared(function() {
-	//...
+    //...
 });
 ```
 #### Retrieve each module that you would like to use inside the callback:
 There is no need to get the modules that you won't be using in this file.
 ```
 mod.prepare({
-	"utils": "modules/utils.js",
-	"calc":  "modules/calculus.js"
+    "utils": "modules/utils.js",
+    "calc":  "modules/calculus.js"
 });
 mod.loadPrepared(function() {
-	var Utils = mod.get("utils"); //You can also use mod.require (an alias to mod.get)
-	//var Calc = mod.get("calc");
+    var Utils = mod.get("utils"); //You can also use mod.require (an alias to mod.get)
+    //var Calc = mod.get("calc");
 
-	console.log(Utils.captializeSentence("hello, recycle.js!"));
+    console.log(Utils.captializeSentence("hello, recycle.js!"));
 });
 ```
 > Hello, recycle.js!
@@ -64,12 +64,12 @@ Consider returning an object, with various methods and properties for the user t
 ```
 //modules/utils.js
 mod.exports = (function() {
-	return {
-		captializeSentence: function(str) {
-			//...
-		},
-		//...
-	}
+    return {
+        captializeSentence: function(str) {
+            //...
+        },
+        //...
+    }
 })();
 ```
 
@@ -78,25 +78,25 @@ mod.exports = (function() {
 mod.prepare returns a reference to mod, allowing for chainging from mod.prepare
 ```
 mod.prepare({
-	EXCLAMER: "modules/exclamer.js",
-	ADDER: "modules/adder.js",
-	DEPEND: "modules/depend.js"
+    EXCLAMER: "modules/exclamer.js",
+    ADDER: "modules/adder.js",
+    DEPEND: "modules/depend.js"
 })
 .loadPrepared(function() {
-	//...
+    //...
 });
 ```
 You can even group sets of related module preperations (WIP, use strings teach about globals later)
 ```
 mod.prepare({
-	EXCLAMER: "modules/exclamer.js",
-	ADDER: "modules/adder.js",
-	DEPEND: "modules/depend.js"
+    EXCLAMER: "modules/exclamer.js",
+    ADDER: "modules/adder.js",
+    DEPEND: "modules/depend.js"
 })
 .prepare({
-	EXCLAMER: "modules/exclamer.js",
-	ADDER: "modules/adder.js",
-	DEPEND: "modules/depend.js"
+    EXCLAMER: "modules/exclamer.js",
+    ADDER: "modules/adder.js",
+    DEPEND: "modules/depend.js"
 })
 ```
 If you prefer, you can import one module at a time (Possible remove this functionality?)(WIP)
