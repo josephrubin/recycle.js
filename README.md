@@ -12,8 +12,8 @@ A perfectly lightweight, utterly simple, asynchronous JavaScript module library.
 ### Quick start instructions
 #### Download recycle.js, and reference it from your HTML file:
 recycle.js has no dependencies on other libraries, so feel free to load it in first.
-```
 >index.html
+```
 <script type = "text/javascript" src = "recycle.js"></script>
 ```
 #### Prepare all modules once by associating an identifier with the path to each module file:
