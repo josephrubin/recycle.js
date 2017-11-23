@@ -19,8 +19,8 @@ A perfectly lightweight, utterly simple, asynchronous JavaScript module library.
 <script type = "text/javascript" src = "main.js"></script> <!-- Code that uses recycle.js -->
 ```
 recycle.js has no dependencies on other libraries, so feel free to load it first.
-### Prepare all modules once by associating an identifier with the path to each module file
-The path should be relative to the HTML file.
+### Prepare all modules by associating an identifier with the path to each module file
+Use `mod.prepare(obj)` which allows you to prepare many modules at once. The path for each module should be relative to the HTML file.
 >main.js
 ```
 mod.prepare({
@@ -30,7 +30,7 @@ mod.prepare({
 ```
 The order that you list the modules will not effect their ability to interact with one another.
 ### Load up the modules you have prepared and provide a callback function
-All code that uses the modules should be placed inside the callback, to make sure that they are loaded before they are needed.
+All code that uses the modules should be placed inside the `mod.loadPrepared(cback)` callback, to make sure that they are loaded before they are needed.
 Do not use this callback in place of a body onload if you need one, since you can never be sure which will occur first.
 >main.js
 ```
@@ -41,10 +41,11 @@ mod.prepare({
 mod.loadPrepared(function() {
     //...
 });
-IMPORTANT: if the modules have already been loaded when the callback is set, the callback will fire immediately, so do not worry about setting it too late. Your code will still run!
 ```
+If the modules have already been loaded when the callback is set, the callback will fire immediately, so do not worry about setting it too late. Your code will still run.
+
 ### Retrieve each module that you would like to use inside the callback
-There is no need to get the modules that you won't be using in this file.
+Use `mod.get(identifier)` or `mod.require(identifier)` to grab the modules that you want to use, one at a time. There is no need to get the modules that you won't be using in this file.
 >main.js
 ```
 mod.prepare({
@@ -53,22 +54,19 @@ mod.prepare({
 });
 mod.loadPrepared(function() {
     var Utils = mod.get("utils"); //You can also use mod.require (an alias to mod.get)
-    //var Calc = mod.get("calc");
-
     console.log(Utils.captializeSentence("hello, recycle.js!"));
 });
 ```
 > Hello, recycle.js!
-
 That's all there is to it.
 
 ## Creating a module
 ### Each module is a seperate .js file
-Do not manually place the script tags in your HTML. recycle.js takes care of loading the modules for you.
+Do not manually place the script tags for these .js files in your HTML. recycle.js takes care of loading the modules for you.
 
 ### Export your module by setting mod.exports to the desired value
 Place your code inside a closure so as not to pollute the global scope, while providing a private interface for your module.
-Consider returning an object, with various methods and properties for the user to interact with.
+Consider returning an object with `mod.exports`, with various methods and properties for the user to interact with.
 >modules/utils.js
 ```
 mod.exports = (function() {
@@ -85,8 +83,8 @@ mod.exports = (function() {
     }
 })();
 ```
-## Advanced capabilities (WIP)
-### Advanced module preperation (WIP)
+## Advanced capabilities and techniques
+### Module preperation chaining
 `mod.prepare` returns a reference to mod, allowing for chaining from `mod.prepare`.
 >main.js
 ```
@@ -121,9 +119,10 @@ If you prefer, you can import one module at a time. (Possible remove this functi
 >main.js
 ```
 mod.prepare(path, identifier); //Note that in this form, the path comes first.
+   .prepare(path2, identifier2);
 ```
-###Preparing and using modules without quotes in identifiers:
-You can leave out the quotes when creating identifiers for modules, and getting the modules from those identifiers.
+###Preparing and using modules without quotes in identifiers
+You can leave out the quotes when creating identifiers for modules using the object form of `mod.prepare`, and when getting the modules from those identifiers.
 recycle.js will reserve the identifiers as global variables, so that JavaScript does not generate a ReferenceError.
 ```
 mod.prepare({
@@ -132,12 +131,15 @@ mod.prepare({
     EMPLOYEE: "modules/worker.js",
 })
 .loadPrepared(function() {
-    var Bank = mod.get(BANK);
+    var Bank = mod.get(BANK); /*We never declared the global BANK, but recycle.js saw that we used BANK as an identifier for a module, so it took the liberty for us.*/
     var Acc = mod.get(ACCOUNT);
     var Emp = mod.get(EMPLOYEE);
 });
 ```
-Caveat: This polutes the global namespace with reserved identifiers. Make sure that you do not try to use a global variable that already exists, for example, `alert` (recycle.js will throw in error instead of hijacking the identifier). To be safe, it is good practice to use all caps for these identifiers, to keep them seperate.
+Caveat: This polutes the global namespace with reserved identifiers.
+Make sure that you do not try to use a global variable that already exists, for example, `alert` (recycle.js will throw in error instead of hijacking the identifier).
+To be safe, it is good practice to use all caps (and underscores) for these identifiers, to keep them seperate.
+Another good option is to suffix each identifier with 'Mod', (e.g. bankMod).
 
 ### Modules can use other modules! (WIP)
 Even circular dependencies are ok.
@@ -156,7 +158,7 @@ mod.prepare({
 ```
 The main file grabs the `BANK` module and tells it to create a new account.
 To do this, the Bank must itself get the new account object from the `ACCOUNT_MANAGER` module.
-Notice how the `Accounts` variable is instantiated immediately, but Bank only attempts to get `ACCOUNT_MANAGER` inside the loadPrepared callback. This is to ensure that the module is ready.
+Notice how in `banking.js` the `Accounts` variable is instantiated immediately, but Bank only attempts to get `ACCOUNT_MANAGER` inside the loadPrepared callback. This is to ensure that the module is ready.
 >banking.js
 ```
 mod.exports = (function() {
@@ -191,7 +193,7 @@ mod.exports = (function() {
     var bankName;
     mod.loadPrepared(function() {
         Bank = mod.get(BANK);
-        bankName = Bank.bankName; //This line can be an issue in more complex code, see below
+        bankName = Bank.bankName;
     });
     
     Accounts.createAccount = function(name) {
@@ -204,10 +206,11 @@ mod.exports = (function() {
     return Accounts;
 })();
 ```
-Because the functions `setupAccount` and `createAccount` are called by `main.js` inside a `loadPrepared` callback, they themselves are not placed inside such a callback in their own module files. Those functions will have access to all module dependancies by the time they run. This is because the module's `loadPrepared` callbacks happen before the loadPrepared callback in `main.js`.
-Howerver, you have no control over which module's `loadPrepared` callback will happen first. In general, this is no problem. The account will be created successfully no matter the order that the two callbacks happen in.
-However, keep in mind that if modules initialize themselves in the `loadPrepared` callback based on the values of other modules which do the same thing, you could run into problems.
-The remedy is simple. Provide initialization functions for the private interfaces of modules whose initialzation relies on other modules, so that you can choose the order to execute them in.
+Because the functions `setupAccount` and `createAccount` are called by `main.js` inside a `loadPrepared` callback, they themselves are not placed inside such a callback in their own module files. Those functions will have access to all module dependancies by the time they run. This is because the module's `loadPrepared` callbacks happen before the loadPrepared callback in `main.js`. The circular dependancy works!
+
+However, you have no control over which module's `loadPrepared` callback will happen first. In general, this is no problem. The account will be created successfully no matter the order that the two callbacks happen in.
+But keep in mind that if modules initialize themselves in the `loadPrepared` callback based on the values of other modules which do the same thing, you could run into problems.
+The remedy is simple. Provide initialization functions for the private interfaces of modules whose initialization relies on other modules, so that you can choose the order to execute them in.
 In this case, we should grab the bank's name inside `initialize`, which will be called from `main.js` before the `ACOUNT_MANAGER` module is used:
 >accounts.js
 ```
@@ -220,9 +223,9 @@ mod.exports = (function() {
         Bank = mod.get(BANK);
     });
 
-    *Accounts.initialize = function() {
+    Accounts.initialize = function() {
         bankName = Bank.bankName;
-    }*
+    }
     
     Accounts.createAccount = function(name) {
         var savingsAccount = {};
