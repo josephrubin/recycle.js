@@ -1,25 +1,26 @@
 # recycle.js
 A perfectly lightweight, utterly simple, asynchronous JavaScript module library.
 
-### Features (rewrite this section) (WIP)
-- Modules can reference other modules, even circularly.
-- Asynchronous script loading, which does not block the HTML from populating.
-- Seperation of modules for total encapsulation
-- Does not polute global scope etc
-- Modules alow for code reuse across projects
-- No transpiler, preprocesser, or instalation
+## Features
+- Asynchronous script loading, which does not block the HTML from populating, or other scripts from running at the same time.
+- Modules can reference other modules, and even circular dependancies among modules work.
+- No need to install anything, or run a transpiler or any other sort of preprocesser on your code.
 
-### Quick start instructions
-#### Download recycle.js, and reference it from your HTML file:
-recycle.js has no dependencies on other libraries, so feel free to load it first.
+### Why use modules?
+- Modules alow for code reuse across projects.
+- Seperation of code for better encapsulation.
+- Modules inside closures do not polute the global scope.
+
+## Quick start instructions
+### Download recycle.js, and reference it from your HTML file
 >index.html
 ```
 <script type = "text/javascript" src = "recycle.js"></script> <!-- Load recycle.js -->
 <script type = "text/javascript" src = "main.js"></script> <!-- Code that uses recycle.js -->
 ```
-#### Prepare all modules once by associating an identifier with the path to each module file:
+recycle.js has no dependencies on other libraries, so feel free to load it first.
+### Prepare all modules once by associating an identifier with the path to each module file
 The path should be relative to the HTML file.
-The order that you list the modules will not effect their ability to interact with one another.
 >main.js
 ```
 mod.prepare({
@@ -27,7 +28,8 @@ mod.prepare({
     "calc":  "modules/calculus.js"
 });
 ```
-#### Load up the modules you have prepared and provide a callback function:
+The order that you list the modules will not effect their ability to interact with one another.
+### Load up the modules you have prepared and provide a callback function
 All code that uses the modules should be placed inside the callback, to make sure that they are loaded before they are needed.
 Do not use this callback in place of a body onload if you need one, since you can never be sure which will occur first.
 >main.js
@@ -41,7 +43,7 @@ mod.loadPrepared(function() {
 });
 IMPORTANT: if the modules have already been loaded when the callback is set, the callback will fire immediately, so do not worry about setting it too late. Your code will still run!
 ```
-#### Retrieve each module that you would like to use inside the callback:
+### Retrieve each module that you would like to use inside the callback
 There is no need to get the modules that you won't be using in this file.
 >main.js
 ```
@@ -60,28 +62,32 @@ mod.loadPrepared(function() {
 
 That's all there is to it.
 
-### Creating a module
-#### Each module is a seperate .js file:
+## Creating a module
+### Each module is a seperate .js file
 Do not manually place the script tags in your HTML. recycle.js takes care of loading the modules for you.
 
-#### Export your module by setting mod.exports to the desired value:
+### Export your module by setting mod.exports to the desired value
 Place your code inside a closure so as not to pollute the global scope, while providing a private interface for your module.
 Consider returning an object, with various methods and properties for the user to interact with.
 >modules/utils.js
 ```
 mod.exports = (function() {
-    return {
+    var privateValue = "hunter2"; //Variables and functions inside the closure are private, and will not be exported unless returned.
+    return { //Variables and functions specifically returned from the closure are public.
         captializeSentence: function(str) {
             //...
         },
+        changePrivate: function(new) {
+            privateValue = new; //Private values from a closure can be accessed and modified by public functions.
+        },
+        publicValue = "*******",
         //...
     }
 })();
 ```
-
-### Advanced capabilities (WIP)
-#### Advanced module preperation (WIP)
-mod.prepare returns a reference to mod, allowing for chaining from mod.prepare
+## Advanced capabilities (WIP)
+### Advanced module preperation (WIP)
+`mod.prepare` returns a reference to mod, allowing for chaining from `mod.prepare`.
 >main.js
 ```
 mod.prepare({
@@ -93,7 +99,7 @@ mod.prepare({
     //...
 });
 ```
-You can even group sets of related module preperations (WIP, use strings teach about globals later)
+You can even group sets of related module preperations.
 >main.js
 ```
 mod.prepare({ //Algorithms
@@ -111,13 +117,13 @@ mod.prepare({ //Algorithms
     //...
 });
 ```
-If you prefer, you can import one module at a time (Possible remove this functionality?)(WIP)
+If you prefer, you can import one module at a time. (Possible remove this functionality?)(WIP)
 >main.js
 ```
 mod.prepare(path, identifier); //Note that in this form, the path comes first.
 ```
-Preparing and using modules without quotes in identifiers:
-You can leave out the quotes when creating identifiers for modules, and getting the modles from those identifiers.
+###Preparing and using modules without quotes in identifiers:
+You can leave out the quotes when creating identifiers for modules, and getting the modules from those identifiers.
 recycle.js will reserve the identifiers as global variables, so that JavaScript does not generate a ReferenceError.
 ```
 mod.prepare({
@@ -131,10 +137,9 @@ mod.prepare({
     var Emp = mod.get(EMPLOYEE);
 });
 ```
-This reserves global blah blah
-Cannot overwrite something. Polutes global scope. example of error
-Recommend using capitals since this so you know what is what.
-#### Modules can use other modules! (WIP)
+Caveat: This polutes the global namespace with reserved identifiers. Make sure that you do not try to use a global variable that already exists, for example, `alert` (recycle.js will throw in error instead of hijacking the identifier). To be safe, it is good practice to use all caps for these identifiers, to keep them seperate.
+
+### Modules can use other modules! (WIP)
 Even circular dependencies are ok.
 Consider the following example, with two modules. One represents a bank, and the other is a helper module which manages bank savings accounts.
 >main.js
