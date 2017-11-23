@@ -75,7 +75,7 @@ if (window.mod == (void 0))
 						(function(m) {
 							console.log("LOADED " + id);
 							if (typeof lib.exports == 'object')
-								m.instance = Object.assign({}, lib.exports); //clone if obj
+								m.instance = lib.exports;// Object.assign({}, lib.exports); //clone if obj? this would mean that no internal changes to private vars could be made after loading the module
 							else
 								m.instance = lib.exports;
 							lib.exports = null;

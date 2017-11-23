@@ -121,7 +121,8 @@ If you prefer, you can import one module at a time. (Possible remove this functi
 mod.prepare(path, identifier); //Note that in this form, the path comes first.
    .prepare(path2, identifier2);
 ```
-###Preparing and using modules without quotes in identifiers
+
+### Preparing and using modules without quotes in identifiers
 You can leave out the quotes when creating identifiers for modules using the object form of `mod.prepare`, and when getting the modules from those identifiers.
 recycle.js will reserve the identifiers as global variables, so that JavaScript does not generate a ReferenceError.
 ```
@@ -141,8 +142,7 @@ Make sure that you do not try to use a global variable that already exists, for 
 To be safe, it is good practice to use all caps (and underscores) for these identifiers, to keep them seperate.
 Another good option is to suffix each identifier with 'Mod', (e.g. bankMod).
 
-### Modules can use other modules! (WIP)
-Even circular dependencies are ok.
+### Modules can use other modules!
 Consider the following example, with two modules. One represents a bank, and the other is a helper module which manages bank savings accounts.
 >main.js
 ```
@@ -259,5 +259,5 @@ mod.exports = (function() {
     return Accounts;
 })();
 ```
-
-TODO: Modules are cloned. Internal changes after load are irrelevant
+Modules that depend on other modules can be very powerful indeed.
+However, keep in mind that the more coupled your modules are, the harder it will be to reuse them in future projects. Try to only implement coupling when necessary.
